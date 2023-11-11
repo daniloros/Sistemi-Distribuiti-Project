@@ -6,6 +6,7 @@ import { ChatAppContext } from '@/Context/ChatAppContext';
 import images from "../../assets";
 
 import Style from "./NavBar.module.css";
+import {Form} from "@/Components";
 
 const NavBar = () => {
   const menuItems = [
@@ -101,6 +102,22 @@ const NavBar = () => {
           </div>
         </div>
       </div>
+
+      {/* MODEL COMPONENT */}
+      {openModel && (
+          <div className={Style.modelBox}>
+            <Form
+                openBox={setOpenModel}
+                title="BENVENUTO NELLA"
+                head="CHAT"
+                info="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eius fuga tenetur harum necessitatibus suscipit, cupiditate omnis vel consequuntur voluptas, iste, dolorem beatae corrupti natus. Cupiditate in libero reiciendis velit laboriosam."
+                smaLLInfo="Per favore seleziona il tuo nome"
+                image={images.hero}
+                functionName={createAccount}
+                address={account}
+            />
+          </div>
+      )}
     </div>
   );
 }
