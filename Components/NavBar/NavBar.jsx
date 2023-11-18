@@ -6,7 +6,7 @@ import { ChatAppContext } from '@/Context/ChatAppContext';
 import images from "../../assets";
 
 import Style from "./NavBar.module.css";
-import {Form} from "@/Components";
+import {Form, Error} from "@/Components";
 
 const NavBar = () => {
   const menuItems = [
@@ -118,6 +118,7 @@ const NavBar = () => {
             />
           </div>
       )}
+      {error == "" ? "" : <Error error = {error} />}
     </div>
   );
 }
