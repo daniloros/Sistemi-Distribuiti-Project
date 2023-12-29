@@ -30,6 +30,9 @@ contract ChatApp{
     mapping(address => user ) userList; //ad ogni utente è associato un indirizzo
     mapping(bytes32 => message[]) allMessages; //map  messaggi tra utenti
 
+    event NewMessageReceived(address sender, address receiver, string message); //evento per la notifica di in nuovo messaggio
+
+
     function checkUserExists(address pubkey) public view returns(bool){
         return bytes(userList[pubkey].name).length> 0;
     }
@@ -95,6 +98,9 @@ contract ChatApp{
         bytes32 chatCode = _getChatCode(msg.sender, friend_key);
         message memory newMsg = message(msg.sender, block.timestamp, _msg);
         allMessages[chatCode].push(newMsg);
+
+        // Emit di un evento quando viene inviato un messaggio
+        emit NewMessageReceived(msg.sender, friend_key, _msg);
     }
 
     function readMessage(address friend_key) external view  returns (message[] memory){

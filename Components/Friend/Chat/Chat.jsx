@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Image from "next/image";
 import { useRouter} from "next/router";
 
 import Style from './Chat.module.css';
 import images from '../../../assets';
-import{convertTime} from "@/Utils/apiFeature";
+import {connectingWithContract, convertTime} from "@/Utils/apiFeature";
 import{Loader} from "../../index";
 
 const Chat = ({
@@ -24,6 +24,7 @@ const Chat = ({
         address: ""
     });
     const router = useRouter();
+    const messagesEndRef = useRef(null);
     useEffect(() => {
         if (!router.isReady) return;
         setChatData({
@@ -43,6 +44,33 @@ const Chat = ({
             readUser(newChatData.address);
         }
     }, [router.query]);
+
+    useEffect(() => {
+        const checkForNewMessage = async () => {
+            try {
+                const contract = await connectingWithContract();
+
+                contract.on("NewMessageReceived", async (sender, receiver, message) => {
+                    if (receiver.toLowerCase() === account.toLowerCase()) {
+                        window.location.reload();
+                    }
+                });
+
+                return () => {
+                    contract.off("NewMessageReceived");
+                };
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        checkForNewMessage();
+    }, [account, readMessage]);
+
+    // Effetto per far scorrere la finestra verso il basso quando ci sono nuovi messaggi
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [readMessage]);
 
 
     // console.log("chatData " + chatData.address, chatData.name);
@@ -93,6 +121,7 @@ const Chat = ({
                                     </div>
                                 ))
                             }
+                            <div ref={messagesEndRef} />
                         </div>
                     </div>
 
