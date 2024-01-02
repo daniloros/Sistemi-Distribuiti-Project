@@ -4,14 +4,14 @@ import Image from 'next/image';
 import Style from './Form.module.css';
 import images from '../../assets';
 import { ChatAppContext } from '@/Context/ChatAppContext';
-import { Loader } from '../../Components/index';
+import {Error, Loader} from '../../Components/index';
 
 const Form = ({ openBox, title, address, head, info, smaLLinfo, image, functionName }) => {
 
   const [name, setName] = useState("");
   const [accountAddress, setAccountAddress] = useState("");
 
-  const { loading } = useContext(ChatAppContext);
+  const { loading, error } = useContext(ChatAppContext);
   return (
     <div className={Style.Model}>
       <div className={Style.Model_box}>
@@ -60,6 +60,7 @@ const Form = ({ openBox, title, address, head, info, smaLLinfo, image, functionN
           }
         </div>
       </div>
+      {error == "" ? "" : <Error error = {error} />}
     </div>
   );
 }

@@ -105,7 +105,14 @@ export const ChatAppProvider = ({ children }) => {
             router.push('/');
             window.location.reload();
         } catch (error) {
-            setError("errore mentre stai provando ad aggiungere un amico");
+            const reasonRegex = /reason="([^"]+)"/;
+            const reasonMatch = (error.message).match(reasonRegex);
+            if (reasonMatch && reasonMatch.length > 1) {
+                const reason = reasonMatch[1];
+                setError(reason);
+            } else {
+                setError("Errore, verificare i dati.");
+            }
             console.log(error);
         }
     };
